@@ -14,7 +14,6 @@ const Index = () => {
     console.log('🔵 Botón presionado - iniciando login...');
 
     try {
-      console.log('🔵 Llamando a supabase.auth.signInWithOAuth...');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -23,7 +22,6 @@ const Index = () => {
         }
       })
 
-      console.log('🔵 Respuesta de Supabase:', { data, error });
 
       if (error) {
         console.error('❌ Error de Supabase:', error);
@@ -31,12 +29,10 @@ const Index = () => {
         return
       }
 
-      console.log('✅ Login iniciado:', data)
-
       // Abrir manualmente el navegador si hay URL
       if (data?.url) {
         console.log('🌐 Abriendo navegador con URL:', data.url);
-        await WebBrowser.openBrowserAsync(data.url);
+        await WebBrowser.openBrowserAsync(data.url); //abrimos el navegador con la URL de Supabase
       } else {
         console.log('⚠️ No hay URL en la respuesta');
       }

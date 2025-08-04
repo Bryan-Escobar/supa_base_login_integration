@@ -22,6 +22,8 @@ export default function RootLayout() {
 
       // Verificar si es un callback de OAuth
       if (url.includes('auth/callback') || url.includes('access_token=') || url.includes('code=')) {
+
+        //obtenemos los tokens de la URL y luego se los pasamos como params a la url de router.push (se los pasamos a la pantalla de callback)
         console.log('🚀 Navegando a auth/callback...');
         // Pasar la URL como parámetro al callback
         const encodedUrl = encodeURIComponent(url);
@@ -34,7 +36,7 @@ export default function RootLayout() {
       handleDeepLink(url);
     });
 
-    // Verificar si hay un deep link inicial
+    // listener que escuchas cuando la app se abre desde un deep link (cuando regresa de la panttalla de google)
     Linking.getInitialURL().then((url) => {
       if (url) {
         console.log('🔗 Deep link inicial:', url);
