@@ -13,6 +13,7 @@ export default function Profile() {
 
     const getUserData = async () => {
         try {
+            //supaabse.auth.getUser() obtiene el usuario actual de la sesión establecido en el setSession del callback
             const { data: { user }, error } = await supabase.auth.getUser();
 
             if (error) {
