@@ -1,12 +1,13 @@
+import { useAuth } from '@/hooks/auth/useAuth';
 import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const { logOut } = useAuth();
     useEffect(() => {
         getUserData();
     }, []);
@@ -77,6 +78,13 @@ export default function Profile() {
                 <Text style={styles.value}>
                     {new Date(user.created_at).toLocaleDateString()}
                 </Text>
+            </View>
+
+            <View style={styles.infoContainer}
+            >
+                <Pressable style={{ width: '60%', backgroundColor: 'red', padding: 10, borderRadius: 10 }} onPress={logOut}>
+                    <Text style={{ color: 'white', textAlign: 'center' }}>Cerrar Sesión</Text>
+                </Pressable>
             </View>
         </View>
     );

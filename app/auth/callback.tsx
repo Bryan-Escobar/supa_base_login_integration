@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/hooks/auth/useAuthStore';
 import { supabase } from '@/lib/supabase';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
@@ -6,7 +7,7 @@ import { Text, View } from 'react-native';
 export default function AuthCallback() {
     const router = useRouter();
     const params = useLocalSearchParams();
-
+    const setSession = useAuthStore((state: any) => state.setSession);
     useEffect(() => {
         console.log('🔄 AuthCallback ejecutándose...');
         console.log('📊 Params recibidos:', params);
@@ -46,6 +47,7 @@ export default function AuthCallback() {
                     }
 
                     if (session) {
+                        setSession(session);
                         console.log('✅ Login exitoso!');
                         router.replace('/(tabs)/explore');
                         return;
