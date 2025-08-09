@@ -1,5 +1,5 @@
-import { router, Tabs } from 'expo-router';
-import React, { useEffect } from 'react';
+import { Redirect, Tabs } from 'expo-router';
+import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -13,17 +13,10 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const session = useAuthStore((state: any) => state.session);
 
-  useEffect(() => {
-    // console.log("el session en layout de tabs", (useAuthStore.getState() as { session?: unknown }).session)
-    if (!session) {
-      console.log("No hay sesión activa");
-      router.replace('/');
-    }
-    else {
-      console.log("Hay sesión activa");
-    }
-
-  })
+  // Si no hay sesión, redirigir declarativamente
+  if (!session) {
+    return <Redirect href="/" />;
+  }
 
   return (
     <Tabs

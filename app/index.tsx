@@ -1,8 +1,8 @@
-import { useAuthStore } from '@/hooks/auth/useAuthStore'
 import { useAuth } from '@/hooks/auth/useAuth'
-import { useRouter } from 'expo-router'
+import { useAuthStore } from '@/hooks/auth/useAuthStore'
+import { Redirect, useRouter } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, View } from 'react-native'
 
 WebBrowser.maybeCompleteAuthSession()
@@ -12,15 +12,10 @@ const Index = () => {
   const { signInWithGoogle } = useAuth();
   const session = useAuthStore((state: any) => state.session);
 
-  // 🔥 Si ya hay sesión, redirigir inmediatamente desde index
-  useEffect(() => {
-    if (session) {
-      console.log("🚀 Session detectada en INDEX, redirigiendo a tabs...");
-      router.replace('/(tabs)/explore');
-    }
-  }, [session]);
-
-
+  // Si hay sesión, redirigir declarativamente
+  if (session) {
+    return <Redirect href="/(tabs)/explore" />;
+  }
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
