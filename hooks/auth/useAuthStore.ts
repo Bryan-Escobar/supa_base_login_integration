@@ -25,6 +25,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 const parsedSession = JSON.parse(storedSession);
                 set({ session: parsedSession }); // ← Usar set() directamente
                 console.log('✅ Sesión recuperada del storage');
+
+
+                //!!seteamos la sesión para supabase
                 await supabase.auth.setSession(parsedSession);
             } else {
                 console.log('❌ No hay sesión guardada');
