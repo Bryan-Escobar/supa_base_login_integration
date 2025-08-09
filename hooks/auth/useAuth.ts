@@ -3,6 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useState } from "react";
 import { Alert } from "react-native";
 import { useAuthStore } from "./useAuthStore";
+import { deleteValue } from "./useSecureStorage";
 
 export function useAuth() {
 
@@ -57,6 +58,7 @@ export function useAuth() {
         } finally {
             setLoading(false);
             setSession(null);
+            deleteValue('session')
         }
     }
 

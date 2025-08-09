@@ -1,4 +1,5 @@
 import { useAuth } from '@/hooks/auth/useAuth';
+import { useAuthStore } from '@/hooks/auth/useAuthStore';
 import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
@@ -8,7 +9,10 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const { logOut } = useAuth();
+    const session = useAuthStore((state: any) => state.session);
+    const setSession = useAuthStore((state: any) => state.setSession);
     useEffect(() => {
+        supabase.auth.setSession(session);
         getUserData();
     }, []);
 

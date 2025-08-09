@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import { useAuthStore } from '@/hooks/auth/useAuthStore';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function RootLayout() {
@@ -14,6 +15,22 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  const { getSession, session } = useAuthStore();
+
+  // 🔥 Cargar sesión al iniciar (solo una vez)
+  useEffect(() => {
+    getSession();
+  }, []);
+
+  // 🔥 Solo logging, no redirección desde el layout
+  useEffect(() => {
+    if (session) {
+      console.log("✅ Sesión activa detectada en layout");
+    } else {
+      console.log("❌ No hay sesión activa en layout");
+    }
+  }, [session]); // ← CORREGIDO: [session] en lugar de []
 
   useEffect(() => {
     // Listener para deep links
@@ -27,7 +44,7 @@ export default function RootLayout() {
         console.log('🚀 Navegando a auth/callback...');
         // Pasar la URL como parámetro al callback
         const encodedUrl = encodeURIComponent(url);
-        router.push(`/auth/callback?callbackUrl=${encodedUrl}`);
+        router.replace(`/auth/callback?callbackUrl=${encodedUrl}`);
       }
     };
 
