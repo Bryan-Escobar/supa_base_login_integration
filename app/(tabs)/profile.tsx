@@ -10,9 +10,8 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const { logOut } = useAuth();
     const session = useAuthStore((state: any) => state.session);
-    const setSession = useAuthStore((state: any) => state.setSession);
     useEffect(() => {
-        supabase.auth.setSession(session);
+        // Ya no necesitas setSession manual, el listener lo maneja
         getUserData();
     }, []);
 
@@ -46,7 +45,14 @@ export default function Profile() {
         return (
             <View style={styles.container}>
                 <Text>No hay usuario logueado</Text>
+                <View style={styles.infoContainer}
+                >
+                    <Pressable style={{ width: '60%', backgroundColor: 'red', padding: 10, borderRadius: 10 }} onPress={logOut}>
+                        <Text style={{ color: 'white', textAlign: 'center' }}>Cerrar Sesión</Text>
+                    </Pressable>
+                </View>
             </View>
+
         );
     }
 

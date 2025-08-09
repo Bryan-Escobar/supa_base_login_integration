@@ -7,7 +7,9 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useAuthStore } from '@/hooks/auth/useAuthStore';
+import { deleteValue } from '@/hooks/auth/useSecureStorage';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { supabase } from '@/lib/supabase';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -18,6 +20,36 @@ export default function RootLayout() {
 
   const { getSession, session } = useAuthStore();
 
+  // 🔥 Listener oficial de Supabase (reemplaza timer manual)
+  useEffect(() => {
+    const initializeAuth = async () => {
+      // 1. Restaurar sesión guardada al iniciar
+      await getSession();
+
+      // 2. Listener que maneja TODO automáticamente
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          console.log('🔄 Supabase event:', event);
+
+          // Supabase ya manejó el refresh, solo guardar
+          useAuthStore.getState().setSession(session);
+
+          if (event === 'SIGNED_OUT') {
+            console.log('👋 Usuario deslogueado');
+            deleteValue('session');
+          }
+          if (event === 'TOKEN_REFRESHED') {
+            console.log('✅ Token renovado automáticamente por Supabase');
+          }
+        }
+      );
+
+      return () => subscription.unsubscribe();
+    };
+
+    initializeAuth();
+  }, []);
+
   // 🔥 Cargar sesión al iniciar (solo una vez)
   useEffect(() => {
     getSession();
@@ -25,6 +57,7 @@ export default function RootLayout() {
 
   // 🔥 Solo logging, no redirección desde el layout
   useEffect(() => {
+
     if (session) {
       console.log("✅ Sesión activa detectada en layout");
     } else {
